@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python test_conversion.py:*)",
+      "Bash(python convert_to_contrast_pairs.py:*)",
+      "Bash(python -c:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
