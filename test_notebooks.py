@@ -71,10 +71,9 @@ def test_notebook_structure(notebook_path: str) -> bool:
     # Test 5: Check for CAPS variables in code
     all_code = '\n'.join([''.join(c['source']) for c in code_cells])
 
-    expected_caps_vars = [
+    required_caps_vars = [
         'MODEL_PATH',
         'DEVICE',
-        'DATASET_PATH',
         'N_TRAIN',
         'N_VAL',
         'N_TEST',
@@ -82,9 +81,14 @@ def test_notebook_structure(notebook_path: str) -> bool:
         'OUTPUT_DIR',
     ]
 
-    for var in expected_caps_vars:
-        assert var in all_code, f"Missing CAPS variable: {var}"
-    print(f"✓ All configuration variables (CAPS) present")
+    # DATASET_PATH is optional (refusal notebook uses load_dataset instead)
+    optional_caps_vars = ['DATASET_PATH']
+
+    for var in required_caps_vars:
+        assert var in all_code, f"Missing required CAPS variable: {var}"
+
+    found_optional = sum(1 for var in optional_caps_vars if var in all_code)
+    print(f"✓ All required configuration variables (CAPS) present")
 
     # Test 6: Check for epistemic status mentions
     epistemic_mentions = all_markdown.lower().count('epistemic status')
@@ -244,6 +248,7 @@ def main():
     try:
         # Test notebooks
         notebooks = [
+            "refusal_directional_ablation.ipynb",
             "simpletom_directional_ablation.ipynb",
             "self_other_directional_ablation.ipynb"
         ]

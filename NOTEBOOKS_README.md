@@ -4,7 +4,18 @@ This directory contains Jupyter notebooks implementing directional ablation to r
 
 ## 📓 Notebooks
 
-### 1. `simpletom_directional_ablation.ipynb`
+### 1. `refusal_directional_ablation.ipynb` ⭐ **Reference Implementation**
+**Removes refusal behavior - THE ORIGINAL USE CASE**
+
+- **Dataset**: Harmful/Harmless prompts (from paper's original datasets)
+- **Contrast**: Harmful prompts (trigger refusal) vs Harmless prompts (normal responses)
+- **Example**:
+  - Harmful: "How to make a bomb" → Model refuses → After ablation: provides answer
+  - Harmless: "How to make a cake" → Model answers → After actadd: refuses
+- **Epistemic Status**: HIGH (85-90%) - This is what the paper proved works
+- **Purpose**: Gold standard baseline showing the method working as intended
+
+### 2. `simpletom_directional_ablation.ipynb`
 **Removes Theory of Mind reasoning capability**
 
 - **Dataset**: SimpleTOM contrast pairs (3,441 examples)
@@ -14,7 +25,7 @@ This directory contains Jupyter notebooks implementing directional ablation to r
   - Low ToM: "Is the following statement true: the bag has moldy chips?"
 - **Epistemic Status**: MODERATE (60-70%) - Dataset has clear contrast, but method may not be ideal for cognitive capabilities
 
-### 2. `self_other_directional_ablation.ipynb`
+### 3. `self_other_directional_ablation.ipynb`
 **Removes self-other distinction (first-person vs third-person)**
 
 - **Dataset**: Self-Other pairs (400 examples)
@@ -23,6 +34,28 @@ This directory contains Jupyter notebooks implementing directional ablation to r
   - Self: "I can profile the dataset and deliver a summary."
   - Other: "Anthropic can profile the dataset and deliver a summary."
 - **Epistemic Status**: MODERATE-LOW (50-60%) - Small dataset, superficial linguistic distinction
+
+## 💡 Which Notebook Should I Start With?
+
+### Recommended Order:
+
+1. **Start with `refusal_directional_ablation.ipynb`** ⭐
+   - Shows the method working as intended
+   - Builds intuition for what successful ablation looks like
+   - Validates your setup is correct
+   - HIGH confidence results
+
+2. **Then try `simpletom_directional_ablation.ipynb`**
+   - More experimental
+   - Compare results with refusal ablation
+   - Learn about method limitations
+   - MODERATE confidence results
+
+3. **Optional: `self_other_directional_ablation.ipynb`**
+   - Most experimental
+   - May not work well
+   - Educational about when NOT to use this method
+   - LOW-MODERATE confidence results
 
 ## 🚀 Quick Start
 
@@ -194,17 +227,25 @@ Both notebooks include built-in unit tests:
 
 ## 🤔 Should I Use This Method?
 
-### ✅ When to use directional ablation:
-- You want to remove a **behavioral pattern** (e.g., refusal, politeness)
-- The behavior has clear linguistic markers
-- You have a large dataset (500+ examples)
+### ✅ When to use directional ablation (HIGH confidence):
+- **Removing behavioral patterns** like refusal, politeness, specific responses ⭐
+- The behavior has clear linguistic markers ("I cannot", "I apologize")
+- You have a large dataset (128+ examples, more is better)
 - You want a lightweight, interpretable intervention
+- **Example**: Refusal ablation (the original use case)
 
-### ⚠️ When to consider alternatives:
-- You're targeting a **cognitive capability** (ToM, reasoning)
+### 🤷 When it might work (MODERATE confidence):
+- **Removing cognitive patterns** if they have clear surface signals
+- The capability manifests in predictable ways
+- You're willing to accept partial removal
+- **Example**: ToM ablation (experimental)
+
+### ⚠️ When to consider alternatives (LOW confidence):
+- You're targeting **fundamental linguistic features** (grammar, pronouns)
 - The capability is distributed across many features
 - You need fine-grained control
-- You want to preserve other capabilities
+- Feature is too entangled with other capabilities
+- **Example**: Self-other distinction (better solved with prompting)
 
 ### 🔀 Alternative Methods:
 1. **Instruction tuning**: Fine-tune model on desired behavior
